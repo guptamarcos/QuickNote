@@ -31,8 +31,7 @@ function Signup() {
 
         <div className="text-center">
           <button className="bg-[#4F46E5] text-[#FFFFFF] px-[1.5rem] py-[0.6rem] rounded-lg hover:bg-[#4338CA] transition-colors">
-            Register
-          </button>
+            LogIn          </button>
         </div>
 
         <br />

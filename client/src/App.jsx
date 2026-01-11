@@ -1,4 +1,4 @@
-import {Hero, Layout, Signup, LogIn } from "./components/Index.jsx";
+import {Hero, Layout, Signup, LogIn, DashBoard } from "./components/Index.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([{
@@ -16,6 +16,10 @@ const router = createBrowserRouter([{
     {
       path: "login",
       element: <LogIn/>
+    },
+    {
+      path: "dashboard",
+      element: <DashBoard/>
     }
   ]
 }]);
