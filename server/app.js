@@ -2,8 +2,8 @@ require("dotenv").config();
 
 // CHECKING ENVIRONMENTAL VARIABLES
 if(!process.env.SECRET_KEY || !process.env.DB_URL){
-    console.log("Environmental variables are missing!!");
-    process.exit(1);
+  console.log("Environmental variables are missing!!");
+  process.exit(1);
 }
 
 
@@ -15,6 +15,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { MongoStore }  = require("connect-mongo");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const User = require("./models/userSchema.js");
 
 
 const connectDb = require("./db/connect.js");
@@ -44,6 +47,39 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SECRET_KEY));
 app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+  new LocalStrategy(async function (username, password, done) {
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return done(null, false, { message: "User doesn't exist!!!" });
+      }
+      const isValid = await user.checkPassword(password);
+      if (!isValid) {
+        return done(null, false, { message: "Incorrect password" });
+      }
+      return done(null, user);
+    } catch (err) {
+      return done(err);
+    }
+  })
+);
+
+passport.serializeUser((user, done) => {
+  return done(null, user.id);
+});
+
+passport.deserializeUser(async function (id, done) {
+  try {
+    const currUser = await User.findById(id);
+    return done(null, currUser);
+  } catch (err) {
+    return done(err);
+  }
+});
 
 
 // LINK THE DATABASE WITH THE APPLICATION

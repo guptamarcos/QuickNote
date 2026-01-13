@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { ShowPopupContext } from "../context/showPopup";
 
-function CardDashBoard() {
+function CardDashBoard() { 
+  const {setShowPopup} = useContext(ShowPopupContext);
   return (
-    <div className="h-[15rem] bg-white border border-slate-200 hover:bg-slate-50 p-[1rem] rounded-xl hover:scale-102 duration-[0.2s]">
+    <div className="h-60 bg-white border border-slate-200 hover:bg-slate-50 p-4 rounded-xl hover:scale-102 duration-200">
       <h4 className="flex justify-between">
         <span className="font-semibold text-lg">Practice mindfulness mediation</span>
         <i className="fa-solid fa-thumbtack text-gray-500 cursor-pointer"></i>
       </h4>
-      <p className="py-[0.5rem]"><i>6th April 2024</i></p>
-      <p className="max-h-[6.5rem] overflow-y-hidden leading-[1.55rem]">
+      <p className="py-2"><i>6th April 2024</i></p>
+      <p className="max-h-26 overflow-y-hidden leading-[1.55rem]">
         Mindfulness meditation is a practice of bringing deliberate attention to
         the present moment without judgment. It helps individuals become aware
         of their thoughts, emotions, and bodily sensations as they arise , By
@@ -25,7 +28,7 @@ function CardDashBoard() {
           <h6>&nbsp; #Meditation</h6>
         </div>
         <div className="flex gap-4">
-          <Link to="#"><i className="fa-solid fa-pen text-gray-500 cursor-pointer"></i></Link>
+          <Link to="#"><i className="fa-solid fa-pen text-gray-500 cursor-pointer" onClick={()=>setShowPopup(true)}></i></Link>
           <Link to="#"><i className="fa-solid fa-trash text-gray-500 cursor-pointer"></i></Link>
         </div>
       </div>

@@ -1,6 +1,11 @@
 const app = require("./app.js");
 const ExpressError = require("./utils/ExpressError.js");
 
+const userRoutes = require("./controllers/userController.js");
+
+// ROUTING MIDDLEWARE
+app.use("/api/auth",userRoutes);
+
 
 // IF PATH DOES NOT EXIST
 app.use((req, res, next) => {
@@ -9,7 +14,7 @@ app.use((req, res, next) => {
 
 // ERROR HANDLING MIDDLEWARE
 app.use((err, req, res, next) => {
-  const { status = 500, message = "Internal Server Error" } = err;
+  const { status = 400, message = "Internal Server Error" } = err;
   res.status(status).json({
     success: false,
     error: { message, status },

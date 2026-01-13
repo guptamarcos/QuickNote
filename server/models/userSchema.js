@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: [true,"Username is already exist"],
+    unique: true,
     minlength: [3,"Username must be at least 3 characters"],
     maxlength: [10,"Username cannot exceed 10 characters"],
   },
@@ -26,12 +26,11 @@ const userSchema = new mongoose.Schema({
 
 
 // HASHING THE PASSWORD OF EACH DOCUMENT BEFORE STORING IT IN MONGODB
-userSchema.pre("save",async function hashPassword(next){
+userSchema.pre("save",async function hashPassword(){
   if(!this.isModified("password")){
     return next();
   }
   this.password = await bcrypt.hash(this.password,10);
-  next();
 })
 
 

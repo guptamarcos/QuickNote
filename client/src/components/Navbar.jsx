@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <header className="h-[11vh] w-[100vw] top-0 fixed bg-[#E0E7FF] px-16 py-4  border-b-3 border-stone-300 z-[99]">
+    <header className="h-[11vh] w-screen top-0 fixed bg-[#E0E7FF] px-16 py-4  border-b-3 border-stone-300 z-40">
       <nav className="flex justify-between items-center">
         <h2 className="text-4xl text-[#1E1B4B] font-medium">QuickNote 📝</h2>
         <h4 className="text-2xl text-[#3730A3] font-medium">

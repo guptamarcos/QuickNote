@@ -15,7 +15,7 @@ const checkValidObjectId = (req,res,next) => {
     if(!mongoose.Types.ObjectId.isValid(id)){
       next(new ExpressError(400,"Invalid ObjectId!!"));
     }
-    return true;
+    next();
 }
 
 module.exports = { isAuthenticated, checkValidObjectId };
