@@ -3,8 +3,8 @@ const ExpressError = require("./ExpressError.js");
 
 // CHECK USER IS AUTHENTICATED OR NOT 
 const isAuthenticated = (req,res,next) =>{
-    if(!req.isAuthenticated){
-        throw new ExpressError(401,"User must be logged In !!!");
+    if(!req.isAuthenticated()){
+        return next(new ExpressError(401,"User must be logged In !!!"));
     }
     return next();
 }
@@ -13,9 +13,9 @@ const isAuthenticated = (req,res,next) =>{
 const checkValidObjectId = (req,res,next) => {
     const { id } = req.params;
     if(!mongoose.Types.ObjectId.isValid(id)){
-      next(new ExpressError(400,"Invalid ObjectId!!"));
+      return next(new ExpressError(400,"Invalid ObjectId!!"));
     }
-    next();
+    return next();
 }
 
 module.exports = { isAuthenticated, checkValidObjectId };

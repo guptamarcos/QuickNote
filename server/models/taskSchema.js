@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const cardSchema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema({
    title: {
     type: String,
     required: true,
@@ -18,9 +18,13 @@ const cardSchema = new mongoose.Schema({
    isPinned:{
       type: Boolean,
       default: false,
+   },
+   owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
    }
 },{timestamps: true});
 
-const Card = mongoose.model("Card",cardSchema);
+const Task = mongoose.model("Task",taskSchema);
 
-module.exports = Card;
+module.exports = Task;

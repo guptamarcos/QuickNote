@@ -1,15 +1,16 @@
 const app = require("./app.js");
-const ExpressError = require("./utils/ExpressError.js");
 
-const userRoutes = require("./controllers/userController.js");
+// REQUIRING ROUTE OBJECT
+const userRoutes = require("./routes/userRoutes.js");
+const taskRoutes = require("./routes/taskRoutes.js");
 
 // ROUTING MIDDLEWARE
 app.use("/api/auth",userRoutes);
-
+app.use("/api/tasks",taskRoutes);
 
 // IF PATH DOES NOT EXIST
 app.use((req, res, next) => {
-  next(new ExpressError(404, "Url not found !!"));
+  res.status(404).json({message: "Url not found "});
 });
 
 // ERROR HANDLING MIDDLEWARE

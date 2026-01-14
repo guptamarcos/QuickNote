@@ -19,7 +19,6 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/userSchema.js");
 
-
 const connectDb = require("./db/connect.js");
 
 // SETTING UP SESSIONS OPTIONS
@@ -50,6 +49,7 @@ app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// DEFINING AUTHENTICATION STRATEGY
 passport.use(
   new LocalStrategy(async function (username, password, done) {
     try {
