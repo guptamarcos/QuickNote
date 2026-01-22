@@ -1,6 +1,16 @@
 const { signupValidate } = require("../utils/schemaValidator.js");
 const User = require("../models/userSchema.js");
 
+// GETTING THE USER INFORMATION FOR PERSISTENT LOGIN 
+module.exports.getCurrentUser = (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ user: null });
+  }
+
+  res.status(200).json({user: req.user});
+};
+
+
 // SAVING THE USER INFORMATION IN THE DB
 module.exports.signup = async (req, res) => {
     const { error, value } = signupValidate.validate(req.body);
@@ -36,11 +46,14 @@ module.exports.login  =  (req, res) => {
 };
 
 // LOGOUT THE USER
-module.exports.logout =  (req, res) => {
+module.exports.logout =  async (req, res) => {
   req.logout((err) => {
     if (err) {
       return res.status(500).json({ success: false, message: "Logout failed" });
     }
+    req.session.destroy(()=>{
+      res.clearCookie("connect.sid");
+      res.status(200).json({success: true, message: "User logged out successfully"})
+    });
   });
-  res.status(200).json({ success: true, message: "User logged out successfully" });
 };

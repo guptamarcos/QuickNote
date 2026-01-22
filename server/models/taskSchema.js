@@ -4,8 +4,6 @@ const taskSchema = new mongoose.Schema({
    title: {
     type: String,
     required: true,
-    minlength: [5,"Title must be at least 5 characters"],
-    maxlength: [50,"Username cannot exceed 50 characters"]
    },
    content: {
     type: String,

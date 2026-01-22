@@ -12,5 +12,5 @@ router.route("/:id")
   .patch(isAuthenticated,checkValidObjectId,wrapAsync(taskController.updateRoute))
   .delete(isAuthenticated,checkValidObjectId,wrapAsync(taskController.deleteRoute));
 
-
+router.patch("/:id/isPinned",isAuthenticated, checkValidObjectId,wrapAsync(taskController.isPinnedRoute));
 module.exports = router;

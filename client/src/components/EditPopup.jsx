@@ -1,12 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { ShowPopupContext } from "../context/ShowPopup";
 import axios from "axios";
+import { EditPopupContext } from "../context/EditPopupContext";
 
-function Popup({fetchTasks}) {
-  const { setShowPopup } = useContext(ShowPopupContext);
+function EditPopup({fetchTasks}) {
+  const { editTaskData, setShowEditPopup } = useContext(EditPopupContext);
   const [tagInput, setTagInput] = useState("");
+
   const [inputInfo, setInputInfo] = useState({
-    title: "", content: "", tags: [],
+    title: editTaskData.title || "", 
+    content: editTaskData.content || "",
+    tags: editTaskData.tags || [],
   });
 
   // Disable background scroll
@@ -17,11 +20,15 @@ function Popup({fetchTasks}) {
     };
   }, []);
   
-  async function handleSubmit(evt){
+  async function handleEdit(evt){
     evt.preventDefault();
-    const res = await axios.post("http://localhost:4000/api/tasks", inputInfo, {withCredentials: true});
-    setShowPopup(false);
-    fetchTasks();
+    try{
+      let res = await axios.patch(`http://localhost:4000/api/tasks/${editTaskData._id}`,inputInfo,{withCredentials: true});
+      setShowEditPopup(false); 
+      fetchTasks();
+    }catch(err){
+      console.log(err);
+    }
   }
   
   function inputVal(evt){
@@ -40,22 +47,23 @@ function Popup({fetchTasks}) {
       ...prev,
       tags: [...prev.tags,tagInput.trim()]
     }));
+
     setTagInput("");
   }
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-start">
-      <form onSubmit={handleSubmit} className="mt-[7.5%] w-[35%] p-4 bg-white rounded-xl">
+      <form onSubmit={handleEdit} className="mt-[7.5%] w-[35%] p-4 bg-white rounded-xl">
         <div>
           <label className="flex w-full justify-between">
             <span>TITLE</span>
-            <span className="cursor-pointer text-2xl" onClick={() => setShowPopup(false)}>
+            <span className="cursor-pointer text-2xl" onClick={() => setShowEditPopup(false)}>
               &#215;
             </span>
           </label>
 
           <input
-            placeholder="Go To Gym At 5" type="text" name="title" onChange={inputVal}
+            value={inputInfo.title} type="text" name="title" onChange={inputVal}
             className="text-2xl w-[80%] font-medium px-[0.6rem] py-[0.4rem] text-gray-500 bg-sky-50 rounded-lg"
           />
         </div>
@@ -63,7 +71,7 @@ function Popup({fetchTasks}) {
         <div className="my-4">
           <label className="mb-2">CONTENT</label>
           <textarea
-            placeholder="Content" name="content" onChange={inputVal}
+            value={inputInfo.content} name="content" onChange={inputVal}
             className="h-40 w-full bg-sky-50 rounded-xl p-[0.6rem]"
           />
         </div>
@@ -79,17 +87,17 @@ function Popup({fetchTasks}) {
             </span>
           ))} 
           </div>
-          <button type="button" onClick={addTag} className="px-[0.8rem] border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
+          <button type="button" onClick={addTag} className="px-[0.8rem] mt-2 border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
             &#43;
           </button>
         </div>
 
         <button className="text-lg w-full py-[0.4rem] bg-sky-400 text-white mt-4 rounded-sm">
-          Add
+          Edit
         </button>
       </form>
     </div>
   );
 }
 
-export default Popup;
+export default EditPopup;
