@@ -11,9 +11,7 @@ router.route("/me").get(isAuthenticated,userController.getCurrentUser);
 router.route("/signup").post(wrapAsync(userController.signup));
 
 // LOGIN THE USER
-router.route("/login").post(passport.authenticate("local",{
-    failureMessage: true,
-}),userController.login);
+router.route("/login").post(passport.authenticate("local"),userController.login);
 
 // LOGOUT THE USER
 router.route("/logout").post(isAuthenticated, wrapAsync(userController.logout));

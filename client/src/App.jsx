@@ -3,6 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ShowPopupContextProvider } from "./context/ShowPopup.jsx";
 import { UserContextProvider } from "./context/User.jsx";
 import { EditPopupContextProvider } from "./context/EditPopupContext.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,7 @@ function App() {
             </EditPopupContextProvider>
           </ShowPopupContextProvider>
       </UserContextProvider>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover />
     </>
   );
 }

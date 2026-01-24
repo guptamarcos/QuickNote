@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ShowPopupContext } from "../context/ShowPopup";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Popup({fetchTasks}) {
   const { setShowPopup } = useContext(ShowPopupContext);
@@ -19,9 +20,17 @@ function Popup({fetchTasks}) {
   
   async function handleSubmit(evt){
     evt.preventDefault();
-    const res = await axios.post("http://localhost:4000/api/tasks", inputInfo, {withCredentials: true});
-    setShowPopup(false);
-    fetchTasks();
+    try{
+      const res = await axios.post("http://localhost:4000/api/tasks", inputInfo, {withCredentials: true});
+      setShowPopup(false);
+      fetchTasks();
+      if(res.status === 200){
+        toast.success("Task Edited successfully!!");
+      }
+    }catch(err){
+      toast.error("Something went wrong!!!");
+      console.log(err);
+    }
   }
   
   function inputVal(evt){
@@ -79,12 +88,12 @@ function Popup({fetchTasks}) {
             </span>
           ))} 
           </div>
-          <button type="button" onClick={addTag} className="px-[0.8rem] border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
+          <button type="button" onClick={addTag} className="px-[0.8rem] cursor-pointer border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
             &#43;
           </button>
         </div>
 
-        <button className="text-lg w-full py-[0.4rem] bg-sky-400 text-white mt-4 rounded-sm">
+        <button className="text-lg w-full py-[0.4rem] bg-sky-400 cursor-pointer text-white mt-4 rounded-sm">
           Add
         </button>
       </form>

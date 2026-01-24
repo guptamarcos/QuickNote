@@ -1,10 +1,9 @@
 import { useContext,useEffect,useState } from "react";
-import CardDashBoard from "./CardDashboard";
-import Popup from "./Popup";
-import EditPopup from "./EditPopup.jsx";
+import { CardDashBoard , Popup, EditPopup} from "./Index.jsx";
 import { ShowPopupContext } from "../context/ShowPopup.jsx";
 import { EditPopupContext } from "../context/EditPopupContext.jsx"
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function DashBoard() {
   const { showPopup, setShowPopup } = useContext(ShowPopupContext);
@@ -30,7 +29,12 @@ function DashBoard() {
     try{
       let res = await axios.delete(`http://localhost:4000/api/tasks/${taskId}`, {withCredentials: true});
       setTasks((prev)=> prev.filter((task)=> task._id !==taskId));
+
+      if(res.status === 200){
+        toast.success("Task is deleted successfully!!");
+      }
     }catch(err){
+        toast.error("Something went wrong!!");
       console.log(err);
     }
   }
@@ -40,13 +44,13 @@ function DashBoard() {
       {!tasks.length && <h1 className="text-4xl text-center mt-12">Please add the tasks!!!</h1>}
 
       {tasks.length>0 && tasks.map((task)=>(
-        <CardDashBoard key={task._id} task={task} onDelete={onDelete}/>
+        <CardDashBoard key={task._id} task={task} onDelete={onDelete} fetchTasks={fetchTasks}/>
       ))}
 
       <button type="button" onClick={() => setShowPopup(true)}
-        className="h-14 w-16 rounded-2xl text-5xl text-amber-50 bg-sky-500 text-center fixed bottom-6 right-6 z-99"
+        className="p-[1rem] rounded-2xl text-lg text-amber-50 cursor-pointer bg-sky-500 flex justify-center items-center fixed bottom-18 right-9 z-99"
       >
-        &#43;
+      Add Task
       </button>
       {showPopup && <Popup fetchTasks={fetchTasks}/>}
       {showEditPopup && <EditPopup fetchTasks={fetchTasks}/>}

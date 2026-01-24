@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { EditPopupContext } from "../context/EditPopupContext";
+import { toast } from "react-toastify";
 
 function EditPopup({fetchTasks}) {
   const { editTaskData, setShowEditPopup } = useContext(EditPopupContext);
@@ -25,8 +26,12 @@ function EditPopup({fetchTasks}) {
     try{
       let res = await axios.patch(`http://localhost:4000/api/tasks/${editTaskData._id}`,inputInfo,{withCredentials: true});
       setShowEditPopup(false); 
-      fetchTasks();
+      if(res.status === 200){
+        toast.success("Task Edited successfully!!");
+        fetchTasks();
+      }
     }catch(err){
+      toast.error("Something went wrong!!!");
       console.log(err);
     }
   }
@@ -87,12 +92,12 @@ function EditPopup({fetchTasks}) {
             </span>
           ))} 
           </div>
-          <button type="button" onClick={addTag} className="px-[0.8rem] mt-2 border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
+          <button type="button" onClick={addTag} className="px-[0.8rem] mt-2 cursor-pointer border-2 py-2 bg-sky-50 rounded-xl ml-[0.4rem] text-lg text-blue-800">
             &#43;
           </button>
         </div>
 
-        <button className="text-lg w-full py-[0.4rem] bg-sky-400 text-white mt-4 rounded-sm">
+        <button className="text-lg w-full py-[0.4rem] bg-sky-400 cursor-pointer text-white mt-4 rounded-sm">
           Edit
         </button>
       </form>

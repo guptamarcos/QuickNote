@@ -2,6 +2,7 @@ import { Link , useNavigate} from "react-router-dom";
 import { UserContext } from "../context/User.jsx";
 import { useState, useContext } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Signup() {
   const {setUser} = useContext(UserContext);
@@ -20,7 +21,7 @@ function Signup() {
     }));
   }
 
-  async function handleSubmit(evt) {
+  async function handleSignup(evt) {
     evt.preventDefault();
 
     try {
@@ -30,17 +31,19 @@ function Signup() {
       setCurrUser({
         username: "", email: "", password: "",
       });
-      navigate("/quicknote/dashboard");
+      if(res.status === 200){
+        toast.success("User registered successfully!!")
+        navigate("/quicknote/dashboard");
+      }
+      
     } catch (err) {
-      alert("Username or Email is already exist!!")
-      console.error(err);
+        toast.error("Username or Email is already exist!!");
     }
   }
 
   return (
     <main className="mt-[11vh] h-max bg-[#F9FAFB] flex justify-center items-center relative">
-      <form
-        onSubmit={handleSubmit}
+      <form onSubmit={handleSignup}
         className="bg-[#FFFFFF] h-max border border-[#E5E7EB] rounded-xl p-[2rem] my-[4rem] shadow-sm"
       >
         <h2 className="text-4xl text-center font-bold text-[#111827]">

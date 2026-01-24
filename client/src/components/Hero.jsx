@@ -1,4 +1,4 @@
-import HomeCard from "./HomeCard.jsx";
+import { HomeCard } from "./Index.jsx";
 
 function Hero() {
   return (

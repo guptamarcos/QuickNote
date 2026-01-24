@@ -1,8 +1,9 @@
 import { useContext,useState } from "react";
 import { EditPopupContext } from "../context/EditPopupContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-function CardDashBoard({task,onDelete}) {
+function CardDashBoard({task,onDelete,fetchTasks}) {
   const {setEditTaskData, setShowEditPopup} = useContext(EditPopupContext);
   const [isPinned, setIsPinned] = useState(task.isPinned || false);
 
@@ -19,18 +20,24 @@ function CardDashBoard({task,onDelete}) {
   
   async function handlePinned(evt){
     try{
-      await axios.patch(`http://localhost:4000/api/tasks/${task._id}/isPinned`,{isPinned: !isPinned}, {withCredentials: true});
+      let res = await axios.patch(`http://localhost:4000/api/tasks/${task._id}/isPinned`,{isPinned: !isPinned}, {withCredentials: true});
       setIsPinned((prev)=>!prev);
+      if(res.status ===  200){
+        if(isPinned) toast.success("Task is unpinned successfully!!!");
+        else toast.success("Task is pinned successfully!!!");
+      }
+      fetchTasks();
+       
     }catch(err){
+      toast.error("Something went wrong!!");
       console.log(err);
     }
-    console.log(evt.target);
   }
 
   return (
-    <div className="h-60 flex flex-col bg-white border border-slate-200 hover:bg-slate-50 p-4 rounded-xl hover:scale-102 duration-200">
+    <div className="h-65 flex flex-col bg-white border border-slate-200 hover:bg-slate-50 p-4 rounded-xl hover:scale-102 duration-200">
       <h4 className="flex justify-between">
-        <span className="font-semibold text-lg">
+        <span className="font-semibold text-xl">
           {task.title}
         </span>
         <i onClick={handlePinned} className= { `fa-solid fa-thumbtack cursor-pointer ${isPinned? "text-black": "text-gray-500"} `}></i>
@@ -42,9 +49,9 @@ function CardDashBoard({task,onDelete}) {
         {task.content}
       </p>
       <div className="mt-auto flex justify-between items-center">
-        <div className="flex">
+        <div className="flex flex-wrap">
           {task.tags.map((tag,index)=>{
-            return <h6 key={index}>#{tag} &nbsp;</h6>
+            return <h6 key={index}><b>#{tag} </b>&nbsp;</h6>
           })}
         </div>
         <div className="flex gap-4 ">

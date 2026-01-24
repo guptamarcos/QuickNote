@@ -2,6 +2,7 @@ import { Link , useNavigate} from "react-router-dom";
 import { UserContext } from "../context/User.jsx";
 import { useState, useContext } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Login() {
   const {setUser} = useContext(UserContext);
@@ -19,24 +20,30 @@ function Login() {
     }));
   }
 
-  async function handleSubmit(evt) {
+  async function handleLogin(evt) {
     evt.preventDefault();
     try {
-      let { data } = await axios.post("http://localhost:4000/api/auth/login",currUser,{withCredentials: true});
-      setUser(data.user);
+      let res = await axios.post("http://localhost:4000/api/auth/login",currUser,{withCredentials: true});
+      setUser(res.data.user);
       setCurrUser({
         username: "", password: "",
       });
-      navigate("/quicknote/dashboard");
+      
+      if(res.status === 200){
+        toast.success("User logged in successfully!!");
+        navigate("/quicknote/dashboard");
+      }
     } catch (err) {
-      alert("Incorrect Username or Password!!");
-      console.error(err);
+        if(err.response.data === "Unauthorized"){
+          toast.error("Incorrect username or password!!");
+        }
+        console.log(err);
     }
   }
 
   return (
     <main className="mt-[11vh] h-max bg-[#F9FAFB] flex justify-center items-center relative">
-      <form onSubmit={handleSubmit} className="bg-[#FFFFFF] h-max border border-[#E5E7EB] rounded-xl p-[2rem] my-[4rem] shadow-sm">
+      <form onSubmit={handleLogin} className="bg-[#FFFFFF] h-max border border-[#E5E7EB] rounded-xl p-[2rem] my-[4rem] shadow-sm">
         
         <h2 className="text-4xl text-center font-bold text-[#111827]">LogIn</h2>
 
